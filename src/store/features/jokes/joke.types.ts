@@ -1,5 +1,5 @@
 export interface JokeInitialState {
-  jokes: Joke[];
+  jokes: { total: number; result: Joke[] };
   isLoading: boolean;
   error: any;
 }

@@ -1,46 +1,56 @@
 "use client";
-import Card from "@/components/ui/card";
+import debounce from "lodash.debounce";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-import axios from "axios";
-import { Montserrat } from "next/font/google";
-import { useEffect, useState } from "react";
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-});
+import { useActions } from "@/hooks/use-actions";
+import { useQuery } from "@tanstack/react-query";
+import { useCallback, useState, useTransition } from "react";
+import Cards from "@/components/cards";
+import { useAppDispatch } from "@/hooks/use-app-dispatch";
+import { clearJokes } from "@/store/features/jokes/joke.slice";
 
 export default function Home() {
-  const [data, setData] = useState<any[]>([]);
+  const dispatch = useAppDispatch();
+  const { fetchJokes } = useActions();
   const [value, setValue] = useState<string>("");
-  useEffect(() => {
-    axios
-      .get(
-        `https://api.chucknorris.io/jokes/search?query=Chuck Norris can bitch slap`,
-        {}
-      )
-      .then((res) => setData(res.data));
-    console.log(data);
-  }, [value]);
+  const [search, setSearch] = useState<string>("");
+  const [isPending, startTransition] = useTransition();
+  const request = debounce(async () => {
+    refetch();
+  }, 300);
+  const debounceRequest = useCallback(() => {
+    request();
+  }, []);
+  const { refetch } = useQuery({
+    queryKey: ["jokes"],
+    queryFn: async () => {
+      if (search.length <= 3) {
+        dispatch(clearJokes());
+        return {};
+      }
+      const result = await fetchJokes(search);
+
+      return result;
+    },
+    enabled: false,
+  });
+
   return (
     <main className="flex flex-col items-center justify-center mt-[128px]">
-      <div className="max-w-[626px] w-full">
+      <div className="max-w-[626px] w-full px-3 sm:px-0">
         <Input
+          autoFocus
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={(e) => {
+            setValue(e.target.value);
+            startTransition(() => {
+              setSearch(e.target.value);
+            });
+            debounceRequest();
+          }}
           placeholder="Search jokes..."
         />
-        <p className={cn("ml-9 mt-5 text-[16px] font-normal leading-5")}>
-          Found jokes: 12
-        </p>
       </div>
-      <div className="grid grid-cols-3 gap-5 max-w-[1596px] px-5 mt-[60px]">
-        {Array(10)
-          .fill(0)
-          .map((joke, idx) => (
-            <Card key={idx} />
-          ))}
-      </div>
+      {!isPending && <Cards value={search} />}
     </main>
   );
 }

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Fira_Sans } from "next/font/google";
-import "./globals.css";
 import ReduxProvider from "@/components/providers/redux-provider";
+import ReactQueryProvider from "@/components/providers/react-query-provider";
+
+import "./globals.css";
 
 const firaSans = Fira_Sans({
   subsets: ["latin"],
@@ -19,10 +21,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ReduxProvider>
-      <html lang="en">
-        <body className={firaSans.className}>{children}</body>
-      </html>
-    </ReduxProvider>
+    <ReactQueryProvider>
+      <ReduxProvider>
+        <html lang="en">
+          <body className={firaSans.className}>{children}</body>
+        </html>
+      </ReduxProvider>
+    </ReactQueryProvider>
   );
 }

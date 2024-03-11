@@ -1,11 +1,13 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchJokes = createAsyncThunk(
   "jokes/fetch",
   async (data: string, thunkAPI) => {
     try {
-      const { data: jokes } = await axios.get(``);
+      const { data: jokes } = await axios.get(
+        `https://api.chucknorris.io/jokes/search?query=${data}`
+      );
 
       return jokes;
     } catch (err) {
