@@ -6,7 +6,7 @@ export const fetchJokes = createAsyncThunk(
   async (data: string, thunkAPI) => {
     try {
       const { data: jokes } = await axios.get(
-        `https://api.chucknorris.io/jokes/search?query=${data}`
+        `${process.env.NEXT_PUBLIC_API_URL!}/jokes/search?query=${data}`
       );
 
       return jokes;
