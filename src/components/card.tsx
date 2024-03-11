@@ -24,15 +24,15 @@ const Card: FC<CardProps> = ({ isLarge, joke }) => {
       </div>
       <div
         className={cn(
-          "flex flex-col gap-y-5 xl:flex-row justify-between text-[#767676] text-[14px] leading-[17px]  ",
+          "flex flex-col gap-y-5 xl:flex-row justify-between text-[#767676] text-[14px] leading-[17px]",
           {
             "mt-[30px]": !isLarge,
             "mt-[60px]": isLarge,
           }
         )}
       >
-        <div className="">{joke.id}</div>
-        <div className="">{joke.created_at}</div>
+        <div>{joke.id}</div>
+        <div>{joke.created_at}</div>
       </div>
     </Link>
   );
