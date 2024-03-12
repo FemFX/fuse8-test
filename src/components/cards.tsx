@@ -40,7 +40,7 @@ const Cards: FC<CardsProps> = ({ jokes, isLoading, error }) => {
             Found jokes: {jokes.total}
           </p>
         </div>
-        <div className="grid  sm:grid-cols-2 lg:grid-cols-6 gap-5 max-w-[1596px] px-5 mt-[60px]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-5 max-w-[1596px] px-5 mt-[60px]">
           {jokes.result.map((joke, idx) => (
             <Card key={joke.id} joke={joke} isLarge={idx < 2} />
           ))}
