@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FC, memo } from "react";
+import { FC } from "react";
 import { cn } from "@/lib/utils";
 import { Joke } from "@/store/features/jokes/joke.types";
 
@@ -38,4 +38,4 @@ const Card: FC<CardProps> = ({ isLarge, joke }) => {
   );
 };
 
-export default memo(Card);
+export default Card;

@@ -1,4 +1,4 @@
-import { FC, memo } from "react";
+import { FC } from "react";
 import { Montserrat } from "next/font/google";
 import { cn } from "@/lib/utils";
 import Card from "./card";
@@ -51,4 +51,4 @@ const Cards: FC<CardsProps> = ({ jokes, isLoading, error }) => {
   return null;
 };
 
-export default memo(Cards);
+export default Cards;
