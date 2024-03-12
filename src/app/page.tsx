@@ -2,21 +2,33 @@
 import Cards from "@/components/cards";
 import useSearchJokes from "@/hooks/use-jokes";
 import { Input } from "@/components/ui/input";
+import Loader from "@/components/loader";
+import { useAppSelector } from "@/hooks/use-app-selector";
+import { useDeferredValue } from "react";
 
 export default function Home() {
-  const { handleChange, value } = useSearchJokes();
+  const state = useAppSelector((state) => state.joke);
+  const deferredJokes = useDeferredValue(state.jokes);
+  const { handleChange, isPending } = useSearchJokes();
   return (
     <main className="flex flex-col items-center justify-center mt-[128px]">
       <div className="max-w-[626px] w-full px-3 sm:px-0">
         <Input
           autoFocus
-          value={value}
           onChange={handleChange}
           placeholder="Search jokes..."
         />
       </div>
 
-      <Cards value={value} />
+      {isPending ? (
+        <Loader />
+      ) : (
+        <Cards
+          jokes={deferredJokes}
+          isLoading={state.isLoading}
+          error={state.error}
+        />
+      )}
     </main>
   );
 }

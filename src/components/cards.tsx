@@ -1,32 +1,30 @@
 import { FC, memo } from "react";
-import { Loader2 } from "lucide-react";
 import { Montserrat } from "next/font/google";
-import { useAppSelector } from "@/hooks/use-app-selector";
 import { cn } from "@/lib/utils";
 import Card from "./card";
+import Loader from "./loader";
+import { Joke } from "@/store/features/jokes/joke.types";
 
 interface CardsProps {
-  value: string;
+  jokes: {
+    total: number;
+    result: Joke[];
+  };
+  isLoading: boolean;
+  error: any;
 }
 
 const montserrat = Montserrat({
   subsets: ["latin"],
 });
 
-const Cards: FC<CardsProps> = ({ value }) => {
-  const { jokes, error, isLoading } = useAppSelector((state) => state.joke);
+const Cards: FC<CardsProps> = ({ jokes, isLoading, error }) => {
   if (isLoading) {
-    return (
-      <Loader2 className="animate-spin flex items-center justify-center mt-24" />
-    );
+    return <Loader />;
   }
 
   if (error) {
     return <div>Something went wrong...</div>;
-  }
-
-  if (value.length > 3 && jokes.total === 0) {
-    return <div className="mt-24">Jokes not found...</div>;
   }
 
   if (jokes.total > 0) {
