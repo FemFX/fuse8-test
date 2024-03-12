@@ -34,7 +34,7 @@ const Cards: FC<CardsProps> = ({ jokes, isLoading, error }) => {
           <p
             className={cn(
               montserrat.className,
-              "ml-9 mt-5 text-[16px] font-normal leading-5 text-[#282626]"
+              "ml-9 mt-5 text-[12px] md:text-[14px] lg:text-[16px] font-normal leading-5 text-[#282626]"
             )}
           >
             Found jokes: {jokes.total}
