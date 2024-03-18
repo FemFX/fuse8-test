@@ -11,7 +11,7 @@ export default function Home() {
   const deferredJokes = useDeferredValue(state.jokes);
   const { handleChange, isPending } = useSearchJokes();
   return (
-    <main className="flex flex-col items-center justify-center mt-[128px]">
+    <main className="flex flex-col items-center justify-center mt-[128px] overflow-x-hidden">
       <div className="max-w-[626px] w-full px-3 sm:px-0">
         <Input
           autoFocus

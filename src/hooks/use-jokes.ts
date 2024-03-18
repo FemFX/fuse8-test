@@ -11,9 +11,9 @@ const useSearchJokes = () => {
   const { fetchJokes } = useActions();
   const [value, setValue] = useState<string>("");
   const [isPending, startTransition] = useTransition();
-  const fetchJokesCallback = useCallback(fetchJokes, []);
+  const fetchJokesCallback = useCallback(fetchJokes, [fetchJokes]);
   const { refetch } = useQuery({
-    queryKey: ["jokes", value],
+    queryKey: ["jokes"],
     queryFn: async () => {
       await queryClient.cancelQueries({ queryKey: ["todos"] });
       if (value.length <= 3) {
@@ -33,16 +33,13 @@ const useSearchJokes = () => {
     []
   );
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setValue(e.target.value);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
 
-      startTransition(() => {
-        debouncedRefetch();
-      });
-    },
-    [setValue]
-  );
+    startTransition(() => {
+      debouncedRefetch();
+    });
+  };
 
   return {
     handleChange,
