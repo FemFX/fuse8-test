@@ -1,4 +1,4 @@
-import { useCallback, useState, useTransition } from "react";
+import { useCallback, useDeferredValue, useState, useTransition } from "react";
 import { useAppDispatch } from "@/hooks/use-app-dispatch";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { clearJokes } from "@/store/features/jokes/joke.slice";
@@ -9,21 +9,23 @@ const useSearchJokes = () => {
   const queryClient = useQueryClient();
   const dispatch = useAppDispatch();
   const { fetchJokes } = useActions();
-  const [value, setValue] = useState<string>("");
   const [isPending, startTransition] = useTransition();
+  const [value, setValue] = useState<string>("");
+  const [search, setSearch] = useState<string>("");
+  // const search = useDeferredValue(value);
   const fetchJokesCallback = useCallback(fetchJokes, [fetchJokes]);
   const { refetch } = useQuery({
-    queryKey: ["jokes"],
+    queryKey: ["jokes", search],
     queryFn: async () => {
       await queryClient.cancelQueries({ queryKey: ["todos"] });
-      if (value.length <= 3) {
+      if (search.length <= 3) {
         dispatch(clearJokes());
         return {};
       }
-      const result = fetchJokesCallback(value);
+      const result = fetchJokesCallback(search);
       return result;
     },
-    enabled: false,
+    // enabled: false,
   });
 
   const debouncedRefetch = useCallback(
@@ -35,10 +37,12 @@ const useSearchJokes = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
-
     startTransition(() => {
-      debouncedRefetch();
+      setSearch(e.target.value);
     });
+    // startTransition(() => {
+    //   debouncedRefetch();
+    // });
   };
 
   return {
